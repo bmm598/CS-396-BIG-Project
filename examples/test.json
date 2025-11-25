@@ -1,0 +1,15 @@
+{
+  "points": [
+    {
+      "type": "point",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "type": "point",
+      "x": 3,
+      "y": 4
+    }
+  ],
+  "type": "segment"
+}
