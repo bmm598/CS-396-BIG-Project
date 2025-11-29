@@ -3,11 +3,9 @@
 (provide 
     point 
     segment 
-    triangle 
     polygon
     point-json 
     segment-json 
-    triangle-json 
     polygon-json
     point-x
     point-y
@@ -32,16 +30,6 @@
             'points (list 
                 (point-json (segment-p1 s))
                 (point-json (segment-p2 s))
-                    )
-    )
-)
-
-(define (triangle-json t)
-    (hash   'type "triangle"
-            'points (list 
-                (point-json (triangle-p1 t))
-                (point-json (triangle-p2 t))
-                (point-json (triangle-p3 t))
                     )
     )
 )
