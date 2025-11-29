@@ -48,7 +48,6 @@
     [(< len 5)
      (printf "Usage:\n")
      (printf "  racket export-json.rkt output.json x1 y1 x2 y2   ; segment\n")
-     (printf "  racket export-json.rkt output.json x1 y1 x2 y2 x3 y3 ; triangle\n")
      (printf "  racket export-json.rkt output.json x1 y1 x2 y2 x3 y3 ... ; polygon\n")]
     [(= len 5)
      ;; segment
@@ -59,17 +58,6 @@
      (define y2 (string->number (list-ref args 4)))
      (export-segment filename x1 y1 x2 y2)
      (printf "Segment JSON written to ~a\n" filename)]
-    [(= len 7)
-     ;; triangle
-     (define filename (list-ref args 0))
-     (define x1 (string->number (list-ref args 1)))
-     (define y1 (string->number (list-ref args 2)))
-     (define x2 (string->number (list-ref args 3)))
-     (define y2 (string->number (list-ref args 4)))
-     (define x3 (string->number (list-ref args 5)))
-     (define y3 (string->number (list-ref args 6)))
-     (export-triangle filename x1 y1 x2 y2 x3 y3)
-     (printf "Triangle JSON written to ~a\n" filename)]
     [(even? (- len 1))
      ;; polygon
      (define filename (car args))
