@@ -4,13 +4,45 @@ Geometry Engine is a cross-language interpreter and analysis system.
 
 Scheme (Racket) defines points and segments, C++ performs numerical operations, and Prolog validates geometric relations.
 
+## Design Choices
+
+#### Language-Level Design
+
+**Language Specialization:**
+
+* Scheme (Racket) defines points and segments.
+* C++ performs numerical operations.
+* Prolog validates geometric relations.
+
+**Shared Data Format**
+
+* JSON is used for file exchange between Scheme and C++.
+* C++ Writes to .pl files for generating the facts and queries used by Prolog.
+
+**Data Flow**
+
+* Geometry facts flow from C++ -> Scheme -> C++ -> Prolog -> C++.
+
+#### Generating Geometry Design
+
+* I decided to split up how racket generates the geometry and how it exports it. export-geometry takes in the values from the command, and then parses them to the geometry functions to actually generate the geometry. Then export-geometry writes the geometry to JSON to be read by C++.
+
+#### C++ Client Design
+
+* The easiest way I could think of integrating all three languages was to have one of them be a client (or broker) that handles calls to the other two languages. 
+    * To accomplish this, I thought to make C++ the client for which the user interacts with in order to generate geometry, do calculations, and verify relations.
+
+#### Rule Design
+
+* All except the intersecting segments rules that are used for validation are made to check based on the points facts passed to them making it easer create queries.
+
 ## Dependencies
 
 [nlohmann]: https://github.com/nlohmann/json
 [racket]: https://docs.racket-lang.org/raqet/installation.html
 [prolog]: https://www.swi-prolog.org/download/stable
 
-[nlohmann/json][nlohmann] is needed for JSON parsing.
+[nlohmann/json][nlohmann] is needed for JSON parsing in C++.
 
 For Ubuntu:
 
@@ -26,13 +58,15 @@ For Ubuntu:
 sudo apt-get install racket
 ```
 
-[prolog][prolog] is needed for interpreting rules and creating geometry.
+[prolog][prolog] is needed for interpreting rules and validating geometry.
 
 For Ubuntu:
 
 ```bash
 sudo apt-get install swi-prolog
 ```
+
+The rest of the dependencies are included in c++17.
 
 ## Usage
 
