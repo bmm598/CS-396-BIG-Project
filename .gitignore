@@ -1,1 +1,7 @@
 .vscode/
+
+cpp/src/output.json
+
+cpp/src/queries.pl
+
+prolog/geometry.pl
