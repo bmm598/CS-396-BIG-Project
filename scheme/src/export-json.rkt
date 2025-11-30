@@ -17,15 +17,6 @@
   (export-json filename json-data)
 )
 
-(define (export-triangle filename x1 y1 x2 y2 x3 y3)
-  (define p1 (point x1 y1))
-  (define p2 (point x2 y2))
-  (define p3 (point x3 y3))
-  (define tri (triangle p1 p2 p3))
-  (define json-data (triangle-json tri)) 
-  (export-json filename json-data)
-)
-
 (define (export-polygon filename coords)
   (define numbers (map string->number coords))
   (define points

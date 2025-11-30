@@ -32,16 +32,6 @@
             (hash 'type "point" 'x 3 'y 4))) 
     "segment-json")
 
-;; triangle test
-(define tri (triangle (point 0 0) (point 3 0) (point 3 4)))
-(check-and-report 
-    (triangle-json tri)
-    (hash 'type "triangle"
-        'points (list (hash 'type "point" 'x 0 'y 0)
-            (hash 'type "point" 'x 3 'y 0)
-            (hash 'type "point" 'x 3 'y 4)))
-    "triangle-json")
-
 ;; polygon test
 (define poly (polygon (list (point 0 0) (point 3 0) (point 3 4) (point 1 5) (point 0 0))))
 
