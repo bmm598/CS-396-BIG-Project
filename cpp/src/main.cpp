@@ -2,30 +2,41 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-#include <nlohmann/json.hpp>
 #include <vector>
-using json = nlohmann::json;
-
-// #include "geometry.h"
+#include "geometry.h"
+#include "parser.h"
 
 using namespace std;
 
+auto getPoints(std::string outputFile) {
+    ifstream f("output.json");
+    json j;
+    f >> j;
+   
+    auto points = j["points"];
+    for (auto& p : points) {
+        cout << "Point: (" << p["x"] << ", " << p["y"] << ")\n";
+    }
+    return points;
+}
+
 int main() {
     std::string outputFile = "output.json";
-    std::vector<int> pts;
+    std::vector<double> pts;
     bool addPoints = true;
     char res;
-    int x;
-    int y;
+    double x;
+    double y;
 
     cout << "=== Geometry Engine ===" << endl;
     cout << "Please add a point: " << endl;
 
+    // get user input for point values
     while (addPoints) {
         cout << "X Value: ";
         cin >> x;
         while(cin.fail()) {
-            cout << "Please enter an integer: ";
+            cout << "Please enter an number: ";
             cin.clear();
             cin.ignore(256,'\n');
             cin >> x;
@@ -38,7 +49,7 @@ int main() {
         cout << "Y Value: ";
         cin >> y;
         while(cin.fail()) {
-            cout << "Please enter an integer: ";
+            cout << "Please enter an number: ";
             cin.clear();
             cin.ignore(256,'\n');
             cin >> y;
@@ -53,6 +64,12 @@ int main() {
         if(pts.size()>2) {
             cout << "Would you like to add another point? y/n ";
             cin >> res;
+            while(res != 'y' && res != 'Y' && res != 'n' && res != 'N') {
+                cout << "Please enter y or n: ";
+                cin.clear();
+                cin.ignore(256,'\n');
+                cin >> res;
+            }
             if(res == 'y' || res == 'Y') {
                 addPoints = true;
             }
@@ -64,6 +81,8 @@ int main() {
         }
     }
 
+    cout << endl;
+    cout << "=== Scheme Integration ===" << endl;
     cout << endl;
     cout << "Using Scheme to generate points:" << endl;
 
@@ -77,16 +96,107 @@ int main() {
     std::string cmd = "racket ../../scheme/src/export-json.rkt " + outputFile + " " + args;
     system(cmd.c_str());
 
-    ifstream f("output.json");
-    json j;
-    f >> j;
-   
-    auto points = j["points"];
-    for (auto& p : points) {
-        cout << "Point: (" << p["x"] << ", " << p["y"] << ")\n";
+    auto points = getPoints(outputFile);
+
+    cout << endl;
+    cout << "=== Prolog Validation ===" << endl;
+    cout << endl;
+    parsePoints(points, pts.size()/2);
+    draftQueries(pts.size()/2);
+    cmd = "swipl -s ../../prolog/main.pl -g \"run_query_from_file('queries.pl')\" -t halt.";
+    system(cmd.c_str());
+
+    cout << endl;
+    cout << "=== C++ Integration ===" << endl;
+    cout << endl;
+    cout << "Numerical Operations: " << endl;
+    cout << endl;
+
+    // compute distances and perimeter of geometry
+    cout << "Computing Distances: " << endl;
+    distances(points, pts.size()/2);
+    perimeter(points, pts.size()/2);
+    cout << endl;
+
+    cout << "Find Centroid/Midpoint: " << endl;
+    centroid(points, pts.size()/2);
+    cout << endl;
+    
+    cout << "Translation: " << endl;
+
+    // get user input for translation value
+    double t_x;
+    double t_y;
+    cout << "What would you like to translate by in the x-axis? ";
+    cin >> t_x;
+    while(cin.fail()) {
+        cout << "Please enter an number: ";
+        cin.clear();
+        cin.ignore(256,'\n');
+        cin >> t_x;
     }
+    cin.clear();
+    cin.ignore(256,'\n');
+    
+    cout << "What would you like to translate by in the y-axis? ";
+    cin >> t_y;
+    while(cin.fail()) {
+        cout << "Please enter an number: ";
+        cin.clear();
+        cin.ignore(256,'\n');
+        cin >> t_y;
+    }
+    cin.clear();
+    cin.ignore(256,'\n');
+    
+    // translate by value
+    translate_x(points, t_x, pts.size()/2, outputFile);
+    points = getPoints(outputFile);
+    translate_y(points, t_y, pts.size()/2, outputFile);
+    points = getPoints(outputFile); 
+    cout << endl;
 
+    cout << "Find Centroid/Midpoint: " << endl;
+    centroid(points, pts.size()/2);
+    cout << endl;
 
+    // get user input for scale factor
+    double factor;
+    cout << "What factor would you like to scale by? ";
+    cin >> factor;
+    while(cin.fail()) {
+        cout << "Please enter an number: ";
+        cin.clear();
+        cin.ignore(256,'\n');
+        cin >> factor;
+    }
+    cin.clear();
+    cin.ignore(256,'\n');
+
+    cout << "Scale about the centroid: " << endl;
+    scale(points, factor, pts.size()/2, outputFile);
+    points = getPoints(outputFile);
+    cout << endl;
+
+    cout << "Computing Distances: " << endl;
+    distances(points, pts.size()/2);
+    perimeter(points, pts.size()/2);
+    cout << endl;
+
+    cout << "Find Centroid/Midpoint: " << endl;
+    centroid(points, pts.size()/2);
+
+    cout << endl;
+    cout << "=== Prolog Validation ===" << endl;
+    cout << endl;
+    parsePoints(points, pts.size()/2);
+    draftQueries(pts.size()/2);
+    cmd = "swipl -s ../../prolog/main.pl -g \"run_query_from_file('queries.pl')\" -t halt.";
+    system(cmd.c_str());
+
+    cout << endl;
+    cout << "=== End of Geometry Engine ===" << endl;
+    cout << endl;
 
     return 0;
 }
