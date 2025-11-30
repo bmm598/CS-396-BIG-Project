@@ -2,11 +2,9 @@
 
 ## Description
 
-Geometry Engine is a cross-language interpreter and analysis system for users to define points, and then the program creates the segment/polygon, checks the validity some geometric relations, and allows the user to translate and scale their shape.
+Geometry Engine is a cross-language interpreter and analysis system for users to define points, and then the program creates the segment/polygon, checks the validity of some geometric relations, and allows the user to translate and scale their shape.
 
 ## Design Choices
-
-#### Language-Level Design
 
 **Language Specialization:**
 
@@ -23,11 +21,11 @@ Geometry Engine is a cross-language interpreter and analysis system for users to
 
 * Geometry facts flow from C++ -> Scheme -> C++ -> Prolog -> C++.
 
-#### Generating Geometry Design
+**Generating Geometry Design**
 
 * I decided to split up how racket generates the geometry and how it exports it. export-geometry takes in the values from the command, and then parses them to the geometry functions to actually generate the geometry. Then export-geometry writes the geometry to JSON to be read by C++.
 
-#### C++ Client Design
+**C++ Client Design**
 
 * The easiest way I could think of integrating all three languages was to have one of them be a client (or broker) that handles calls to the other two languages. 
     * To accomplish this, I thought to make C++ the client for which the user interacts with in order to generate geometry, do calculations, and verify relations.
