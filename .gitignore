@@ -3,3 +3,4 @@ output.json
 queries.pl
 prolog/geometry.pl
 cpp/src/geometry_engine
+deliverables/Report.pdf
