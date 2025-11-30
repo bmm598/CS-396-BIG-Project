@@ -1,7 +1,7 @@
 #include "geometry.h"
 
 auto updatePoints(std::string outputFile) {
-    ifstream f("output.json");
+    ifstream f(outputFile);
     json j;
     f >> j;
    
@@ -67,7 +67,7 @@ void translate_x(nlohmann::json_abi_v3_11_3::basic_json<> pts, double t, size_t 
         cout << "Translating segment by " << t << " on the x-axis" << endl;
     }
 
-    std::string cmd = "racket ../../scheme/src/export-json.rkt " + outputFile + " " + args;
+    std::string cmd = "racket ./scheme/src/export-json.rkt " + outputFile + " " + args;
     system(cmd.c_str());
 }
 
@@ -88,7 +88,7 @@ void translate_y(nlohmann::json_abi_v3_11_3::basic_json<> pts, double t, size_t 
         cout << "Translating segment by " << t << " on the y-axis" << endl;
     }
 
-    std::string cmd = "racket ../../scheme/src/export-json.rkt " + outputFile + " " + args;
+    std::string cmd = "racket ./scheme/src/export-json.rkt " + outputFile + " " + args;
     system(cmd.c_str());
 }
 
@@ -127,7 +127,7 @@ void scale(nlohmann::json_abi_v3_11_3::basic_json<> pts, int s, size_t size, std
 
     std::string args = scaleHelper(pts, s, size, x_coord, y_coord);
 
-    std::string cmd = "racket ../../scheme/src/export-json.rkt " + outputFile + " " + args;
+    std::string cmd = "racket ./scheme/src/export-json.rkt " + outputFile + " " + args;
     system(cmd.c_str());
     pts = updatePoints(outputFile);
 }

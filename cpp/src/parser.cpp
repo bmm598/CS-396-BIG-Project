@@ -2,7 +2,7 @@
 
 void parsePoints(nlohmann::json_abi_v3_11_3::basic_json<> pts, size_t size) {
     
-    std::ofstream pl("../../prolog/geometry.pl");
+    std::ofstream pl("./prolog/geometry.pl");
 
     for (size_t i = 0; i < size; i++) {
         pl << "point(p" << i+1 << "," << pts[i]["x"] << "," << pts[i]["y"] << ")." << endl;

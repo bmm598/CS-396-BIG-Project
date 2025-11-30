@@ -9,7 +9,7 @@
 using namespace std;
 
 auto getPoints(std::string outputFile) {
-    ifstream f("output.json");
+    ifstream f(outputFile);
     json j;
     f >> j;
    
@@ -93,7 +93,7 @@ int main() {
     };
 
     // create command
-    std::string cmd = "racket ../../scheme/src/export-json.rkt " + outputFile + " " + args;
+    std::string cmd = "racket ./scheme/src/export-json.rkt " + outputFile + " " + args;
     system(cmd.c_str());
 
     auto points = getPoints(outputFile);
@@ -103,7 +103,7 @@ int main() {
     cout << endl;
     parsePoints(points, pts.size()/2);
     draftQueries(pts.size()/2);
-    cmd = "swipl -s ../../prolog/main.pl -g \"run_query_from_file('queries.pl')\" -t halt.";
+    cmd = "swipl -s ./prolog/main.pl -g \"run_query_from_file('queries.pl')\" -t halt.";
     system(cmd.c_str());
 
     cout << endl;
@@ -191,7 +191,7 @@ int main() {
     cout << endl;
     parsePoints(points, pts.size()/2);
     draftQueries(pts.size()/2);
-    cmd = "swipl -s ../../prolog/main.pl -g \"run_query_from_file('queries.pl')\" -t halt.";
+    cmd = "swipl -s ./prolog/main.pl -g \"run_query_from_file('queries.pl')\" -t halt.";
     system(cmd.c_str());
 
     cout << endl;
